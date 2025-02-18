@@ -1,21 +1,44 @@
 {% extends "index.html" %}
+{% block content %}
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+    {% for task in tasks %}
+    <div class="task-card rounded-lg p-6 transition duration-300 ease-in-out 
+                {% if task.completed %}completed{% endif %}">
+        <div class="flex justify-between gap-2 items-start">
+            <!-- Task Details -->
+            <div>
+                <h2 class="text-xl font-semibold">{{ task.title }}</h2>
+                <p class="text-sm mt-2">{{ task.description }}</p>
+                <p class="text-xs mt-2">{{ task.created_at }}</p>
+            </div>
 
-{%block content%}
+            <!-- Action Buttons -->
+            <div class="flex flex-col space-y-2">
+                
+                <a href="{% url 'done' task.pk %}" 
+                   class="text-green-500 hover:text-green-700 transition duration-300">
+                   {% if task.completed %}☑️{% else%}✔️{%endif%}
+                </a>
 
-{% for task in tasks%}
-    <ul>
-        <li {% if task.completed %}style="color:red" class="line-through" {% endif %}>
-            {{task.title}}
-            {{task.description}}
-            {{task.created_at}}    
-        <a href={%url 'done' task.pk %}  class="md hover:red" >{%if task.completed %}ongoing{%else%} Done {%endif%}</a>
-        <a href={% url 'delete_task' task.pk %}>Delete Task</a>
-        <a href={% url 'edit_task' task.pk %}>Edit Task</a>
-        </li>
-    </ul>
-{%  endfor  %}
+                <a href="{% url 'delete_task' task.pk %}" 
+                   class="text-red-500 hover:text-red-700 transition duration-300">
+                    ❌
+                </a>
+                <a href="{% url 'edit_task' task.pk %}" 
+                   class="text-yellow-500 hover:text-yellow-700 transition duration-300">
+                    ✏️
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
 
-
-<a href={% url 'create'%}>Add</a>
-<h1>this is a tasks page</h1>
+    <!-- Add Task Button -->
+    <div class="task-card rounded-lg p-6 flex justify-center items-center group">
+        <a href="{% url 'create' %}" 
+           class="btn-primary px-6 py-3 rounded-lg text-white transition duration-300 ease-in-out">
+             Add Task
+        </a>
+    </div>
+</div>
 {% endblock %}

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 def signup(req):
     if req.method == 'POST':
@@ -22,7 +22,7 @@ def signup(req):
         user.set_password(password)
         
         user.save()
-        messages.info(req, "User created successfully")
+        messages.success(req, "User created successfully")
         
         return redirect('login')
     
@@ -47,14 +47,14 @@ def login_user(req):
             messages.error(req, "Invalid username or password")
             return redirect('login')
         else: 
+            messages.success(req, "User logged in")
             login(req, user) 
-            messages.info(req, "User logged in")
             return redirect('tasks')
     
     return render(req, 'login.html')
 
 
-def logout(req):
+def logout_user(req):
     logout(req)
     messages.info(req, "User logged out")
     return redirect('home')

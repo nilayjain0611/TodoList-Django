@@ -1,21 +1,38 @@
-{% extends 'index.html' %}
-
+{% extends "index.html" %}
 {% block content %}
-
-<h1>Sign Up User</h1>
-
-<form method="POST" action=''>
-{% csrf_token %}
-
-{% if messages %}
-    {% for msg in messages  %}
-        {{ msg}}
-    {% endfor %}
-{% endif %}
-username: <input type='text' palceholder="Enter username" name="username">
-email:<input type='email' palceholder="Enter email" name="email">
-password: <input type='password' palceholder="Enter password" name="password">
-confirm password: <input type='password' palceholder="Confrim password" name='confirm_password'>
-<button type='submit'>Register</button>
-</form>
+<div class="flex items-center justify-center max-h-screen">
+    <div class="task-card rounded-lg p-8 w-full max-w-md">
+        <h2 class="text-2xl font-bold text-center mb-6">Sign Up</h2>
+        <form method="POST" action="" class="space-y-4">
+            {% csrf_token %}
+            <div>
+                <label for="username" class="block text-sm font-medium">Username</label>
+                <input type="text" id="username" name="username" placeholder="Enter username" 
+                       class="w-full px-3 py-2 mt-1 rounded-md bg-#FFE6C7 text-#454545 focus:outline-none focus:ring-2 focus:ring-#FF6000">
+            </div>
+            <div>
+                <label for="email" class="block text-sm font-medium">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter email" 
+                       class="w-full px-3 py-2 mt-1 rounded-md bg-#FFE6C7 text-#454545 focus:outline-none focus:ring-2 focus:ring-#FF6000">
+            </div>
+            <div>
+                <label for="password" class="block text-sm font-medium">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter password" 
+                       class="w-full px-3 py-2 mt-1 rounded-md bg-#FFE6C7 text-#454545 focus:outline-none focus:ring-2 focus:ring-#FF6000">
+            </div>
+            <div>
+                <label for="confirm_password" class="block text-sm font-medium">Confirm Password</label>
+                <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm password" 
+                       class="w-full px-3 py-2 mt-1 rounded-md bg-#FFE6C7 text-#454545 focus:outline-none focus:ring-2 focus:ring-#FF6000">
+            </div>
+            <button type="submit" 
+                    class="btn-primary w-full py-2 rounded-md transition duration-300">
+                Register
+            </button>
+        </form>
+        <p class="mt-4 text-center text-sm">
+            Already have an account? <a href="{% url 'login' %}" class="text-#FF6000 hover:text-#FFA559">Login here</a>.
+        </p>
+    </div>
+</div>
 {% endblock %}

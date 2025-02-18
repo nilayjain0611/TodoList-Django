@@ -1,26 +1,201 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/heroicons@2.0.10"></script>
+    <style>
+        /* Custom Styles */
+        body {
+            background-color: #454545;
+            color: #FFE6C7;
+        }
 
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>TodoList</title>
-        <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
-    </head>
-    <body>
+        .task-card {
+            border: 2px solid #FF6000;
+            background-color: #FFE6C7;
+            color: #454545;
+        }
 
-        <a href={% url 'home'%}>Home</a>
-        <a href={% url 'tasks'%}>Tasks</a>
-        <a href={% url 'signup'%}>Signup</a>
-        <a href={% url 'login'%}>Login</a>
-        <a href={% url 'login'%}>Login</a>
-        {%block content%}
-        <h1 class="text-3xl font-bold underline">TodoList home page</h1>
+        .task-card.completed {
+            border: 2px solid #FFE6C7;
+            background-color: rgb(27, 25, 24);
+            color: #FFE6C7;
+        }
 
-        {% endblock %}
-        <script src="" async defer></script>
-    </body>
+        .task-card:hover {
+            transform: scale(1.02);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #FF6000;
+            color: #FFE6C7;
+        }
+
+        .btn-primary:hover {
+            background-color: #FFA559;
+        }
+
+        /* Sidebar Partition */
+        .sidebar {
+            border-right: 2px solid #FF6000;
+            box-shadow: 4px 0 6px rgba(0, 0, 0, 0.1);
+            width: 250px; /* Default width */
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #454540;
+            z-index: 50;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* Hide Sidebar on Mobile */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+        }
+
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 100;
+        }
+
+        .hamburger svg {
+            width: 24px;
+            height: 24px;
+            fill: #FFE6C7;
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: block;
+            }
+        }
+
+        /* Main Content Padding */
+        main {
+            margin-left: 250px; /* Default padding */
+            transition: margin-left 0.3s ease-in-out;
+        }
+
+        @media (max-width: 768px) {
+            main {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen font-sans">
+
+    <!-- Hamburger Menu -->
+    <div class="hamburger">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z" />
+        </svg>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="flex flex-col justify-between h-full p-6 mt-4">
+            <!-- User Section -->
+            <div>
+                {% if user.is_authenticated %}
+                <h2 class="text-xl font-bold mb-4 text-#FFE6C7">Welcome, {{ user.username }}!</h2>
+                {% endif %}
+                <nav class="space-y-4">
+                    <a href="{% url 'home' %}" class="flex items-center space-x-2 text-#FFE6C7 hover:text-#FFA559 transition duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                        </svg>
+                        <span>Home</span>
+                    </a>
+                    <a href="{% url 'tasks' %}" class="flex items-center space-x-2 text-#FFE6C7 hover:text-#FFA559 transition duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
+                        </svg>
+                        <span>Tasks</span>
+                    </a>
+                    {% if not user.is_authenticated %}
+                    <a href="{% url 'signup' %}" class="flex items-center space-x-2 text-#FFE6C7 hover:text-#FFA559 transition duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                        </svg>
+                        <span>Signup</span>
+                    </a>
+                    <a href="{% url 'login' %}" class="flex items-center space-x-2 text-#FFE6C7 hover:text-#FFA559 transition duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M5 4a3 3 0 00-3 3v6a3 3 0 003 3h10a3 3 0 003-3V7a3 3 0 00-3-3H5zm-1 9v-1h5v2H5a1 1 0 01-1-1zm7 1h4a1 1 0 001-1v-2h-5v2zm0-3h5V8h-5v2zM9 8H4v2h5V8z" clip-rule="evenodd" />
+                        </svg>
+                        <span>Login</span>
+                    </a>
+                    {% endif %}
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'logout' %}" class="flex items-center space-x-2 text-red-500 hover:text-red-700 transition duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clip-rule="evenodd" />
+                            </svg>
+                            <span>Logout</span>
+                        </a>
+                    {% endif %}
+                </nav>
+            </div>
+            <p class="text-sm text-#FFE6C7">@ Django-todoList-app</p>
+
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="p-6 ">
+        <div class="container mx-auto">
+            {% block content %}
+            <section class="mb-12 flex items-center justify-center h-[80vh]">
+                <div class="text-center">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-#FFE6C7 mb-4">
+                        Stay Organized, Stay Ahead
+                    </h1>
+                    <p class="text-lg md:text-xl lg:text-2xl text-#FFE6C7 mb-8">
+                        Simplify your life with our powerful to-do app.
+                    </p>
+                    <div class="flex justify-center gap-4">
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'tasks' %}" 
+                           class="btn-primary px-6 py-3 rounded-lg text-white transition duration-300">
+                            View Tasks
+                        </a>
+                        {% else %}
+                        <a href="{% url 'signup' %}" 
+                           class="btn-primary px-6 py-3 rounded-lg text-white transition duration-300">
+                            Get Started
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </section>
+            {% endblock %}
+        </div>
+    </main>
+
+    <!-- JavaScript for Sidebar Toggle -->
+    <script>
+        const hamburger = document.querySelector('.hamburger');
+        const sidebar = document.querySelector('.sidebar');
+
+        hamburger.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+        });
+    </script>
+</body>
 </html>

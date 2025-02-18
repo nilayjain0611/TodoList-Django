@@ -11,7 +11,7 @@ urlpatterns =[
     
     path('auth/signup', auth.signup, name='signup'),
     path('auth/login', auth.login_user, name='login'),
-    path('auth/logout', auth.logout, name='logout'),
+    path('auth/logout', auth.logout_user, name='logout'),
     
     
     
