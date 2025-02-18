@@ -1,0 +1,19 @@
+{% extends 'index.html' %}
+
+{% block content %}
+
+<h1>Sign Up User</h1>
+
+<form method="POST", action=''>
+{% csrf_token %}
+
+{% if messages %}
+    {% for msg in messages  %}
+        {{ msg}}
+    {% endfor %}
+{% endif %}
+username: <input type='text' palceholder="Enter username" name="username">
+password: <input type='password' palceholder="Enter password" name="password">
+<button type='submit'>Login</button>
+</form>
+{% endblock %}
