@@ -1,19 +1,23 @@
 {
+    "version": 2,
     "builds": [
-      {
-        "src": "TodoList/wsgi.py",
-        "use": "@vercel/python",
-        "config": {"runtime":"python3.12"}
-      },
-      {
-        "src": "buildfiles.sh",
-        "use": "@vercel/static_build"
-      }
+        {
+            "src": "TodoList/wsgi.py",
+            "use": "@vercel/python"
+        },
+        {
+            "src": "staticfiles_build/**/*",
+            "use": "@vercel/static"
+        }
     ],
     "routes": [
-      {
-        "src": "/(.*)",
-        "dest": "TodoList/wsgi.py"
-      }
+        {
+            "src": "/static/(.*)",
+            "dest": "staticfiles_build/static/$1"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "TodoList/wsgi.py"
+        }
     ]
 }
