@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
+from django.contrib import messages
 from .models import Task
 from .forms import TaskForm
 from django.contrib.auth.decorators import login_required
@@ -25,9 +25,12 @@ def add_task(req):
             task=form.save(commit=False)
             task.user = req.user
             task.save()
+            messages.success(req, f"{task.title} added Successfully")
+            
             return redirect('tasks')
         else: 
             print('Invalid')
+            messages.error(req, "Required parameter")
 
     else:
         form = TaskForm()  
@@ -43,6 +46,7 @@ def edit_task(req, pk):
 
             if form.is_valid():
                 
+                messages.success(req, f"{task.title} updated successfully")
                 form.save()
                 return redirect('tasks')
 
@@ -59,6 +63,7 @@ def edit_task(req, pk):
 def delete_task(req, pk):
     task =  get_object_or_404(Task, pk=pk)
     task.delete()
+    messages.success(req, f"{task.title} Deleted Successfully")
     
     return redirect('tasks')
     
@@ -67,9 +72,7 @@ def done(req, pk):
     
         task = get_object_or_404(Task, pk=pk)
         task.completed = not task.completed
-        
         task.save()
-    
         return redirect('tasks')
 
 
