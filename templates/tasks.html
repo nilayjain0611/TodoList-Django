@@ -2,41 +2,36 @@
 {% block content %}
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
     {% for task in tasks %}
-    <div class="task-card rounded-lg p-6 transition duration-300 ease-in-out 
-                {% if task.completed %}completed{% endif %}">
-        <div class="flex justify-between gap-2 items-start">
-            <!-- Task Details -->
-            <div>
-                <h2 class="text-xl font-semibold">{{ task.title }}</h2>
-                <p class="text-sm mt-2">{{ task.description }}</p>
-                <p class="text-xs mt-2">{{ task.created_at }}</p>
-            </div>
+    <div class="task-card rounded-lg p-4 transition duration-300 ease-in-out 
+                {% if task.completed %}completed{% endif %} flex justify-between items-start">
+        <!-- Task Details (Left Side) -->
+        <div class="w-[85%] overflow-hidden">
+            <h2 class="text-2xl font-semibold break-words">{{ task.title }}</h2>
+            <p class="text-sm mt-1 break-words line-clamp-3">
+                {{ task.description }}
+            </p>
+            <p class="text-xs mt-1 text-gray-500">{{ task.created_at }}</p>
+        </div>
 
-            <!-- Action Buttons -->
-            <div class="flex flex-col space-y-2">
-                
-                <a href="{% url 'done' task.pk %}" 
-                   class="text-green-500 hover:text-green-700 transition duration-300">
-                   {% if task.completed %}☑️{% else%}✔️{%endif%}
-                </a>
-
-                <a href="{% url 'delete_task' task.pk %}" 
-                   class="text-red-500 hover:text-red-700 transition duration-300">
-                    ❌
-                </a>
-                <a href="{% url 'edit_task' task.pk %}" 
-                   class="text-yellow-500 hover:text-yellow-700 transition duration-300">
-                    ✏️
-                </a>
-            </div>
+        <!-- Action Buttons (Right Side - Vertical) -->
+        <div class="flex flex-col space-y-2 items-end">
+            <a href="{% url 'done' task.pk %}" class="text-green-500 hover:text-green-700" title="{% if task.completed %}Undone {% else%}Done{%endif%}">
+               {% if task.completed %}☑️ {% else%}✔️{%endif%}
+            </a>
+            <a href="{% url 'delete_task' task.pk %}" class="text-red-500 hover:text-red-700" title="Delete">
+                ❌
+            </a>
+            <a href="{% url 'edit_task' task.pk %}" class="text-yellow-500 hover:text-yellow-700" title="Edit">
+                ✏️
+            </a>
         </div>
     </div>
     {% endfor %}
 
-    <!-- Add Task Button -->
-    <div class="task-card rounded-lg p-6 flex justify-center items-center group">
+    <!-- Add Task Button (Same Height for Alignment) -->
+    <div class="task-card rounded-lg p-4 flex justify-center items-center">
         <a href="{% url 'create' %}" 
-           class="btn-primary px-6 py-3 rounded-lg text-white transition duration-300 ease-in-out">
+           class="btn-primary px-6 py-2 rounded-lg text-white transition duration-300 ease-in-out">
              Add Task
         </a>
     </div>
