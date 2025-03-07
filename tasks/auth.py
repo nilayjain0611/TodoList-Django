@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.views.decorators.csrf import csrf_protect
+
+@csrf_protect
 def signup(req):
     if req.method == 'POST':
         username = req.POST.get('username') 
@@ -32,6 +35,8 @@ def signup(req):
             
     return render(req, 'signup.html')
             
+
+@csrf_protect
 
 def login_user(req):
     
