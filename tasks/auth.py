@@ -12,7 +12,7 @@ def signup(req):
         if confirm_password != password:
             messages.error(req, "Password doesnt matches")
             return redirect('signup')
-        
+
         if (not username) or( not email) or (not password) or (not confirm_password):
             messages.error(req, "Required parameter")
         else:
