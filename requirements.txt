@@ -1,6 +1,8 @@
 asgiref==3.8.1
 Django==5.1.6
 dotenv==0.9.9
+gunicorn==23.0.0
+packaging==24.2
 psycopg==3.2.5
 psycopg-binary==3.2.5
 python-dotenv==1.0.1
