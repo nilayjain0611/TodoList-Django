@@ -13,60 +13,48 @@ def signup(req):
         confirm_password = req.POST.get('confirm_password') 
         
         if confirm_password != password:
-            messages.error(req, "Password doesnt matches")
+            messages.error(req, "Passwords do not match")
             return redirect('signup')
 
-        if (not username) or( not email) or (not password) or (not confirm_password):
-            messages.error(req, "Required parameter")
-        else:
-            user = User.objects.filter(username=username)
-            
-            if user.exists():
-                messages.error(req, "Username already exists, try another")
-                return redirect('signup')
-            
-            user = User.objects.create_user(username=username, email=email)
-            user.set_password(password)
-            
-            user.save()
-            messages.success(req, "User created successfully")
-            
-            return redirect('login')
-            
+        if not username or not email or not password:
+            messages.error(req, "All fields are required")
+            return redirect('signup')
+
+        if User.objects.filter(username=username).exists():
+            messages.error(req, "Username already exists, try another")
+            return redirect('signup')
+
+        user = User.objects.create_user(username=username, email=email, password=password)
+        messages.success(req, "User created successfully")
+        return redirect('login')
+
     return render(req, 'signup.html')
-            
+
 
 @csrf_protect
-
 def login_user(req):
-    
     if req.method == 'POST':
         username = req.POST.get('username')
         password = req.POST.get('password')
 
-        if (not username) or (not password):
-            messages.error(req, "Required parameter")
-        else:
-            user = User.objects.filter(username=username)
-            
-            if not user.exists():
-                messages.error(req, "User not registered")
-                return redirect('login')
-            
-            user = authenticate(username=username, password=password)
-            
-            if user is  None: 
-                messages.error(req, "Invalid username or password")
-                return redirect('login')
-            else: 
-                messages.success(req, f"{user.username} logged in")
-                login(req, user) 
-                return redirect('tasks')
-    
+        if not username or not password:
+            messages.error(req, "All fields are required")
+            return redirect('login')
+
+        user = authenticate(username=username, password=password)
+
+        if user is None: 
+            messages.error(req, "Invalid username or password")
+            return redirect('login')
+
+        login(req, user)
+        messages.success(req, f"{user.username} logged in")
+        return redirect('tasks')
+
     return render(req, 'login.html')
 
 
 def logout_user(req):
     logout(req)
-    messages.info(req, "User logged out")
-    return redirect('home')
+    messages.success(req, "Logged out successfully")
+    return redirect('login')

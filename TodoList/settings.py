@@ -94,6 +94,9 @@ DATABASES = {
         'PASSWORD': tmpPostgres.password,
         'HOST': tmpPostgres.hostname,
         'PORT': 5432,
+        'OPTIONS': {
+            'sslmode': 'require',  # Explicitly enforce SSL
+        },
     }
 }
 LOGIN_URL = 'login/'
